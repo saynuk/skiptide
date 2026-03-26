@@ -45,11 +45,11 @@ export default function LoginPage() {
           <div style={styles.sentBox}>
             <div style={styles.sentIcon}>✓</div>
             <p style={styles.hint}>
-  			We'll email you a link — no password ever needed. <strong>Also check your spam folder</strong>.
-			</p>
+  		We'll email you a link — no password ever needed. <strong>Also check your spam folder</strong>.
+		</p>
             <p style={styles.sentHint}>
-  			Just click the link and you're in. If you don't see it, check your spam or junk folder.
-			</p>
+  		Just click the link and you're in. If you don't see it, check your spam or junk folder.
+		</p>
           </div>
         ) : (
           <form onSubmit={handleLogin} style={styles.form}>
