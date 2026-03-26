@@ -73,5 +73,14 @@ export async function POST(request: Request) {
       .eq('id', source.id)
   }
 
-  return NextResponse.json({ source, postCount: feedItems.length })
+  const posts = feedItems.map(item => ({
+  source_id: source.id,
+  guid: item.guid,
+  title: item.title,
+  excerpt: item.excerpt,
+  url: item.url,
+  published_at: item.publishedAt.toISOString(),
+}))
+
+return NextResponse.json({ source, posts, postCount: posts.length })
 }
