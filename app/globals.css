@@ -9,6 +9,10 @@
   --teal-light: #E1F5EE;
   --teal-mid: #5DCAA5;
   --teal-dark: #0F6E56;
+}
+
+/* Light theme (default) */
+[data-theme="light"], :root {
   --text-primary: #1a1a1a;
   --text-secondary: #555;
   --text-tertiary: #999;
@@ -16,12 +20,23 @@
   --border-hover: #ccc;
   --bg: #fff;
   --bg-secondary: #f9f9f8;
-  --radius: 8px;
-  --radius-lg: 12px;
 }
 
+/* Dark theme */
+[data-theme="dark"] {
+  --text-primary: #f0f0ee;
+  --text-secondary: #aaa;
+  --text-tertiary: #666;
+  --border: #2a2a2a;
+  --border-hover: #444;
+  --bg: #111;
+  --bg-secondary: #1a1a1a;
+  --teal-light: #0d2e22;
+}
+
+/* Fallback for users with no preference set yet */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --text-primary: #f0f0ee;
     --text-secondary: #aaa;
     --text-tertiary: #666;
@@ -41,23 +56,10 @@ html, body {
   color: var(--text-primary);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
+  transition: background 0.2s, color 0.2s;
 }
 
-/* Use a sans-serif for UI chrome, serif for content */
-.ui {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
+a { color: inherit; text-decoration: none; }
+button { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; cursor: pointer; }
+input { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  cursor: pointer;
-}
-
-input {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}

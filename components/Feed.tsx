@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import AddWriterModal from './AddWriterModal'
+import { useTheme } from '@/lib/useTheme'
 
 type Source = {
   id: string
@@ -63,6 +64,7 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const skipRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
+  const { theme, toggle } = useTheme()
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -146,6 +148,9 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           <div style={s.topbarRight}>
             <button style={s.addBtn} onClick={() => setShowModal(true)}>
               + Add a writer
+            </button>
+            <button style={s.themeBtn} onClick={toggle} title="Toggle theme">
+              {theme === 'dark' ? '☀︎' : '☾'}
             </button>
             <button style={s.signOutBtn} onClick={handleSignOut}>
               Sign out
@@ -547,5 +552,13 @@ const s: Record<string, React.CSSProperties> = {
     justifyContent: 'center',
     fontSize: '18px',
     margin: '0 auto 12px',
+  },
+  themeBtn: {
+    background: 'none',
+    border: 'none',
+    fontSize: '16px',
+    color: 'var(--text-tertiary)',
+    cursor: 'pointer',
+    padding: '7px 4px',
   },
 }
