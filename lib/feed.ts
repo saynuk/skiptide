@@ -7,18 +7,29 @@ const parser = new Parser({
   },
 })
 
-// Attempt to discover the RSS/Atom feed URL from a given homepage URL
+function normalizeUrl(url: string): string {
+  try {
+    const u = new URL(url)
+    if (u.hostname === 'substack.com' && u.pathname.startsWith('/@')) {
+      const username = u.pathname.slice(2).split('/')[0]
+      return `https://${username}.substack.com`
+    }
+    return url
+  } catch {
+    return url
+  }
+}
+
 export async function discoverFeed(inputUrl: string): Promise<{
   feedUrl: string
   title: string
   description: string
   faviconUrl: string
 } | null> {
-  // Normalize URL
   let url = inputUrl.trim()
   if (!url.startsWith('http')) url = 'https://' + url
+  url = normalizeUrl(url)
 
-  // Known patterns for popular platforms
   const candidates = buildCandidates(url)
 
   for (const candidate of candidates) {
@@ -38,7 +49,6 @@ export async function discoverFeed(inputUrl: string): Promise<{
     }
   }
 
-  // Fall back to parsing the HTML for <link rel="alternate">
   try {
     const res = await fetch(url, {
       headers: { 'User-Agent': 'Skiptide/1.0' },
@@ -69,36 +79,42 @@ function buildCandidates(url: string): string[] {
   const u = new URL(url)
   const base = `${u.protocol}//${u.host}`
   const path = u.pathname.replace(/\/$/, '')
-
   const candidates: string[] = []
 
-  // Substack
   if (u.host.includes('substack.com')) {
     candidates.push(`${base}/feed`)
   }
 
-  // Medium
   if (u.host.includes('medium.com')) {
     candidates.push(`${base}/feed`)
+    if (path) candidates.push(`https://medium.com/feed${path}`)
     if (path) candidates.push(`${base}/feed${path}`)
   }
 
-  // Ghost
+  if (u.host.includes('beehiiv.com')) {
+    candidates.push(`${base}/feed`)
+  }
+
+  if (u.host.includes('buttondown.email') || u.host.includes('buttondown.com')) {
+    const slug = path.split('/').filter(Boolean).pop() || ''
+    candidates.push(`https://buttondown.email/${slug}/rss`)
+    candidates.push(`${base}/rss`)
+  }
+
   candidates.push(`${base}/rss/`)
   candidates.push(`${base}/rss`)
-
-  // Generic patterns
+  candidates.push(`${base}/feed/`)
+  candidates.push(`${base}/feed`)
+  candidates.push(`${base}/?feed=rss2`)
   candidates.push(`${base}${path}/feed`)
-  candidates.push(`${base}${path}/feed/`)
   candidates.push(`${base}${path}/rss`)
   candidates.push(`${base}${path}/rss.xml`)
   candidates.push(`${base}${path}/atom.xml`)
-  candidates.push(`${base}/feed`)
   candidates.push(`${base}/feed.xml`)
   candidates.push(`${base}/atom.xml`)
   candidates.push(`${base}/index.xml`)
+  candidates.push(`${base}/rss.xml`)
 
-  // Deduplicate
   return [...new Set(candidates)]
 }
 
@@ -106,15 +122,12 @@ function extractFeedFromHTML(html: string, baseUrl: string): string | null {
   const regex = /<link[^>]+type=["'](application\/rss\+xml|application\/atom\+xml)["'][^>]*href=["']([^"']+)["']/gi
   const match = regex.exec(html)
   if (!match) return null
-
   const href = match[2]
   if (href.startsWith('http')) return href
-
   const base = new URL(baseUrl)
   return `${base.protocol}//${base.host}${href.startsWith('/') ? '' : '/'}${href}`
 }
 
-// Fetch and parse a feed, returning normalized post objects
 export async function fetchFeed(feedUrl: string): Promise<Array<{
   guid: string
   title: string
@@ -137,7 +150,6 @@ export async function fetchFeed(feedUrl: string): Promise<Array<{
 }
 
 function extractExcerpt(text: string, maxLength = 200): string {
-  // Strip HTML tags
   const stripped = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
   if (stripped.length <= maxLength) return stripped
   return stripped.slice(0, maxLength).replace(/\s+\S*$/, '') + '…'
