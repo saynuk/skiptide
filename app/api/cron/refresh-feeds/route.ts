@@ -4,8 +4,13 @@ import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get('authorization')
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const secret = process.env.CRON_SECRET
+  if (authHeader !== `Bearer ${secret}`) {
+    return NextResponse.json({ 
+      error: 'Unauthorized',
+      received: authHeader,
+      expected: `Bearer ${secret}`
+    }, { status: 401 })
   }
 
   const supabase = createSupabaseClient(
