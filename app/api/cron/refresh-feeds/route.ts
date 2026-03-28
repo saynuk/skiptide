@@ -14,12 +14,10 @@ export async function GET(request: Request) {
   const supabase = await createClient()
 
   // Get all sources that haven't been fetched in the last 25 minutes
-  const cutoff = new Date(Date.now() - 25 * 60 * 1000).toISOString()
   const { data: sources } = await supabase
     .from('sources')
     .select('id, feed_url, last_fetched_at')
-    .or(`last_fetched_at.is.null,last_fetched_at.lt.${cutoff}`)
-    .limit(50) // Process in batches to stay within function timeout
+    .limit(50)
 
   if (!sources || sources.length === 0) {
     return NextResponse.json({ message: 'No sources to update', updated: 0 })
