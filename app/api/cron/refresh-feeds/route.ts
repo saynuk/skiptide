@@ -2,10 +2,7 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { fetchFeed } from '@/lib/feed'
 import { NextResponse } from 'next/server'
 
-// This route is called by Vercel Cron every 30 minutes
-// Configured in vercel.json
 export async function GET(request: Request) {
-  // Simple auth check — Vercel sends this header for cron jobs
   const authHeader = request.headers.get('authorization')
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -16,14 +13,17 @@ export async function GET(request: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  // Get all sources that haven't been fetched in the last 25 minutes
-  const { data: sources } = await supabase
+  const { data: sources, error } = await supabase
     .from('sources')
-    .select('id, feed_url, last_fetched_at')
+    .select('id, feed_url')
     .limit(50)
 
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+
   if (!sources || sources.length === 0) {
-    return NextResponse.json({ message: 'No sources to update', updated: 0 })
+    return NextResponse.json({ message: 'No sources found', count: 0 })
   }
 
   let totalNewPosts = 0
