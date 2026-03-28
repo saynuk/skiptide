@@ -20,7 +20,7 @@ if (new URL(url).hostname.includes('patreon.com')) {
   return NextResponse.json(
     {
       error:
-        "Patreon feeds are private and can't be added by URL. If you're a paying member, log in to Patreon, go to the creator's page, open the Membership tab, and look for "Private RSS link." Copy that URL and paste it here instead.",
+      "Patreon feeds are private and can't be added by URL. If you're a paying member, log in to Patreon, go to the creator's page, open the Membership tab, and look for \"Private RSS link.\" Copy that URL and paste it here instead.",
     },
     { status: 422 }
   )
