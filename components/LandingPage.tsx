@@ -97,12 +97,14 @@ export default function LandingPage() {
         {/* Hero */}
         <section style={s.hero}>
           <p style={s.eyebrow}>A quiet corner of the internet</p>
-          <h1 style={s.headline}>
-            Zenscroll the independent writers you follow.<br />
-            <em style={s.headlineEm}>No ads, trolls, or popups.</em>
-          </h1>
-          <p style={s.sub}>
-            Paste any newsletter or blog below — we'll show you their latest writing right now. No algorithm, no noise, no account needed to try.
+		  <h1 style={s.headline}>
+			  Zenscroll the independent writers you follow.
+			</h1>
+			<p style={s.headlineSub}>
+			  No ads, trollchats, or popups.
+			</p>
+			<p style={s.sub}>
+            <strong>Add your first one:</strong> Paste any newsletter or blog below to get started. Add more for an algorithm-free experience with the people you follow.
           </p>
 
           {/* Try it */}
@@ -184,15 +186,15 @@ export default function LandingPage() {
           <div style={s.howSteps}>
             <div style={s.howStep}>
               <div style={s.howNum}>1</div>
-              <div style={s.howText}>Paste any writer's URL — we find their posts automatically</div>
+              <div style={s.howText}>Just add URLs of all the newsletters you follow</div>
             </div>
             <div style={s.howStep}>
               <div style={s.howNum}>2</div>
-              <div style={s.howText}>Your feed shows everything in one calm, chronological place</div>
+              <div style={s.howText}>Your feed calmly shows everything new today</div>
             </div>
             <div style={s.howStep}>
               <div style={s.howNum}>3</div>
-              <div style={s.howText}>When you've read everything, you're done. No endless scroll.</div>
+              <div style={s.howText}>No endless scrolling or distracting side-quests.</div>
             </div>
           </div>
         </section>
@@ -283,11 +285,16 @@ const s: Record<string, React.CSSProperties> = {
     marginBottom: 20,
     letterSpacing: '-0.01em',
   },
-  headlineEm: {
-    fontStyle: 'italic',
-    color: 'var(--accent)',
-  },
-  sub: {
+	headlineSub: {
+	  fontFamily: 'Georgia, serif',
+	  fontSize: 'clamp(22px, 3.5vw, 36px)' as any,
+	  fontWeight: 300,
+	  fontStyle: 'italic',
+	  color: 'var(--accent)',
+	  lineHeight: 1.3,
+	  marginBottom: 28,
+	},  
+	sub: {
     fontSize: 17,
     color: 'var(--text-secondary)',
     lineHeight: 1.7,
