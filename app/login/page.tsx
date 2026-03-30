@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -32,28 +33,26 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
-        <div style={styles.logo}>
-          skip<span style={{ color: '#1D9E75' }}>tide</span>
-        </div>
-        <p style={styles.tagline}>
+    <div style={s.page}>
+      <div style={s.card}>
+        <Link href="/" style={s.logo}>
+          skip<span style={{ color: '#9b87b3', fontStyle: 'italic' }}>tide</span>
+        </Link>
+        <p style={s.tagline}>
           A quiet, personal newspaper<br />for the writers you choose.
         </p>
 
         {sent ? (
-          <div style={styles.sentBox}>
-            <div style={styles.sentIcon}>✓</div>
-            <p style={styles.hint}>
-  		We'll email you a link — no password ever needed. <strong>Also check your spam folder</strong>.
-		</p>
-            <p style={styles.sentHint}>
-  		Just click the link and you're in. If you don't see it, check your spam or junk folder.
-		</p>
+          <div style={s.sentBox}>
+            <div style={s.sentIcon}>✓</div>
+            <p style={s.sentText}>Check your email for a sign-in link.</p>
+            <p style={s.sentHint}>
+              Just click it and you're in. If you don't see it within a minute, check your spam or junk folder.
+            </p>
           </div>
         ) : (
-          <form onSubmit={handleLogin} style={styles.form}>
-            <label style={styles.label} htmlFor="email">
+          <form onSubmit={handleLogin} style={s.form}>
+            <label style={s.label} htmlFor="email">
               Your email address
             </label>
             <input
@@ -63,15 +62,15 @@ export default function LoginPage() {
               onChange={e => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              style={styles.input}
+              style={s.input}
               autoFocus
             />
-            {error && <p style={styles.error}>{error}</p>}
-            <button type="submit" disabled={loading} style={styles.button}>
+            {error && <p style={s.error}>{error}</p>}
+            <button type="submit" disabled={loading} style={s.button}>
               {loading ? 'Sending…' : 'Send me a sign-in link'}
             </button>
-            <p style={styles.hint}>
-              We'll email you a link — no password ever needed.
+            <p style={s.hint}>
+              No password needed. Check spam if it doesn't arrive within a minute.
             </p>
           </form>
         )}
@@ -80,30 +79,34 @@ export default function LoginPage() {
   )
 }
 
-const styles: Record<string, React.CSSProperties> = {
+const s: Record<string, React.CSSProperties> = {
   page: {
     minHeight: '100vh',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     padding: '24px 16px',
-    background: 'var(--bg-secondary)',
+    background: 'var(--bg)',
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
   card: {
-    background: 'var(--bg)',
-    border: '0.5px solid var(--border)',
-    borderRadius: '16px',
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border)',
+    borderRadius: '20px',
     padding: '40px 36px',
     width: '100%',
     maxWidth: '400px',
+    backdropFilter: 'blur(12px)',
   },
   logo: {
-    fontSize: '28px',
-    fontWeight: 500,
-    letterSpacing: '-0.5px',
+    display: 'block',
+    fontSize: '26px',
+    fontWeight: 400,
+    letterSpacing: '0.01em',
     marginBottom: '10px',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    fontFamily: 'Georgia, serif',
+    color: 'var(--accent)',
+    textDecoration: 'none',
   },
   tagline: {
     fontSize: '15px',
@@ -111,6 +114,8 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: 1.6,
     marginBottom: '32px',
     fontFamily: 'Georgia, serif',
+    fontStyle: 'italic',
+    fontWeight: 300,
   },
   form: {
     display: 'flex',
@@ -125,8 +130,8 @@ const styles: Record<string, React.CSSProperties> = {
   input: {
     padding: '11px 14px',
     fontSize: '15px',
-    border: '0.5px solid var(--border-hover)',
-    borderRadius: '8px',
+    border: '1px solid var(--border-hover)',
+    borderRadius: '10px',
     background: 'var(--bg)',
     color: 'var(--text-primary)',
     outline: 'none',
@@ -134,10 +139,10 @@ const styles: Record<string, React.CSSProperties> = {
   },
   button: {
     padding: '12px',
-    background: '#1D9E75',
-    color: '#fff',
+    background: 'var(--accent)',
+    color: '#f5f0f8',
     border: 'none',
-    borderRadius: '8px',
+    borderRadius: '10px',
     fontSize: '15px',
     fontWeight: 500,
     marginTop: '4px',
@@ -160,8 +165,8 @@ const styles: Record<string, React.CSSProperties> = {
   sentIcon: {
     width: '48px',
     height: '48px',
-    background: '#E1F5EE',
-    color: '#1D9E75',
+    background: 'var(--accent-bg)',
+    color: 'var(--accent-mid)',
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
@@ -170,13 +175,15 @@ const styles: Record<string, React.CSSProperties> = {
     margin: '0 auto 16px',
   },
   sentText: {
-    fontSize: '15px',
+    fontSize: '16px',
     color: 'var(--text-primary)',
     lineHeight: 1.6,
     marginBottom: '8px',
+    fontFamily: 'Georgia, serif',
   },
   sentHint: {
     fontSize: '13px',
     color: 'var(--text-tertiary)',
+    lineHeight: 1.6,
   },
 }
