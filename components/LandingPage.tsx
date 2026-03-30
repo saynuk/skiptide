@@ -98,8 +98,8 @@ export default function LandingPage() {
         <section style={s.hero}>
           <p style={s.eyebrow}>A quiet corner of the internet</p>
           <h1 style={s.headline}>
-            Read the writers you love.<br />
-            <em style={s.headlineEm}>Nothing else.</em>
+            Zenscroll the independent writers you follow.<br />
+            <em style={s.headlineEm}>No ads, trolls, or popups.</em>
           </h1>
           <p style={s.sub}>
             Paste any newsletter or blog below — we'll show you their latest writing right now. No algorithm, no noise, no account needed to try.
