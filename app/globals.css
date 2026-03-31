@@ -69,3 +69,10 @@ input { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
 @media (max-width: 768px) {
   .orb1, .orb2, .orb3 { opacity: 0.15; }
 }
+
+@media (max-width: 768px) {
+  [data-theme="dark"] .headline-sub {
+    color: #f0ece8;
+    font-style: italic;
+  }
+}
