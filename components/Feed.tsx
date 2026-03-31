@@ -256,9 +256,9 @@ function PostSection({ label, posts, readSet, onPostClick, sources }: {
   return (
     <div className="feed-section">
       <div className="feed-section-label">{label}</div>
-      {posts.map(post => (
-        <PostCard
-          key={post.id}
+		{posts.map((post, i) => (
+		  <PostCard
+			key={`${post.id}-${i}`}		  
           post={post}
           isRead={readSet.has(post.id)}
           sourceName={sources.find(s => s.id === post.source_id)?.title || ''}
