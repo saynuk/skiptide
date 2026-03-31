@@ -5,8 +5,8 @@
 }
 
 :root {
-  --accent: #6b5a82;
-  --accent-mid: #9b87b3;
+  --accent: #786592;
+  --accent-mid: #b89fc8;
   --accent-light: #c4b5d4;
   --accent-bg: rgba(196,181,212,0.15);
 }
@@ -65,3 +65,7 @@ html, body {
 a { color: inherit; text-decoration: none; }
 button { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; cursor: pointer; }
 input { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+@media (max-width: 768px) {
+  .orb1, .orb2, .orb3 { opacity: 0.15; }
+}
