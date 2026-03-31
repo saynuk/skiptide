@@ -211,7 +211,7 @@ const orb = (color: string): React.CSSProperties => ({
   position: 'fixed',
   borderRadius: '50%',
   filter: 'blur(80px)',
-  opacity: 0.3,
+  opacity: 0.2,
   pointerEvents: 'none',
   zIndex: 0,
   background: color,
@@ -290,9 +290,9 @@ const s: Record<string, React.CSSProperties> = {
 	  fontSize: 'clamp(22px, 3.5vw, 36px)' as any,
 	  fontWeight: 300,
 	  fontStyle: 'italic',
-	  color: 'var(--accent)',
 	  lineHeight: 1.3,
 	  marginBottom: 28,
+  	  // no color here — let CSS handle it
 	},  
 	sub: {
     fontSize: 17,
