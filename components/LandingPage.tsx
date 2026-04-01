@@ -185,15 +185,15 @@ export default function LandingPage() {
         <section style={s.how}>
           <div style={s.howSteps} className="how-steps">
             <div style={s.howStep}>
-              <div style={s.howNum}>1</div>
+              <div style={s.howNum} className="how-num">1</div>
               <div style={s.howText}>Just add URLs of all the newsletters you follow</div>
             </div>
             <div style={s.howStep}>
-              <div style={s.howNum}>2</div>
+              <div style={s.howNum} className="how-num">2</div>
               <div style={s.howText}>Your feed calmly shows everything new today</div>
             </div>
             <div style={s.howStep}>
-              <div style={s.howNum}>3</div>
+              <div style={s.howNum} className="how-num">3</div>
               <div style={s.howText}>No endless scrolling or distracting side-quests.</div>
             </div>
           </div>
@@ -471,7 +471,6 @@ const s: Record<string, React.CSSProperties> = {
   },
   howSteps: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
     gap: 24,
   },
   howStep: {
@@ -484,7 +483,6 @@ const s: Record<string, React.CSSProperties> = {
   },
   howNum: {
     fontFamily: 'Georgia, serif',
-    fontSize: 36,
     fontWeight: 300,
     color: 'var(--accent-mid)',
     marginBottom: 12,

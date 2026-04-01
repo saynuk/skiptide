@@ -71,6 +71,14 @@ input { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
   color: var(--accent);
 }
 
+.how-steps {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.how-num {
+	font-size: 36px;
+}
+
 @media (max-width: 768px) {
   .orb1, .orb2, .orb3 { opacity: 0.15; }
 }
@@ -83,12 +91,37 @@ input { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
   .try-row {
     flex-direction: column;
   }
-
   .try-row button {
     width: 100%;
   }
-
   .how-steps {
     grid-template-columns: 1fr;
+  }
+  .how-step {
+    position: relative;
+    padding-top: 40px;
+    margin-top: 24px;
+  }
+
+  .how-num {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--border-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin: 0;
+	font-size: 20px;
+  }
+
+  .how-text {
+    font-size: 16px;
   }
 }
