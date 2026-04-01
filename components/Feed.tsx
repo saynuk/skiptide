@@ -135,7 +135,7 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
         {/* About, pricing */}
 		<div className="sidetab">
 			<div className="about"><a href="/about">About</a></div>
-			<div className="billing"><a href="https://buymeacoffee.com/saynuk/membership" traget="_blank">Billing</a></div>
+			<div className="billing"><a href="https://buymeacoffee.com/saynuk/membership" target="_blank">Billing</a></div>
 		</div>
 		  
           <div className="feed-topbar-right">
