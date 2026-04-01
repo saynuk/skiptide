@@ -109,7 +109,7 @@ export default function LandingPage() {
 
           {/* Try it */}
           <div style={s.tryBox}>
-            <form onSubmit={handleTry} style={s.tryRow}>
+            <form onSubmit={handleTry} style={s.tryRow} className="try-row">
               <input
                 style={s.tryInput}
                 type="text"
@@ -183,7 +183,7 @@ export default function LandingPage() {
 
         {/* How it works */}
         <section style={s.how}>
-          <div style={s.howSteps}>
+          <div style={s.howSteps} className="how-steps">
             <div style={s.howStep}>
               <div style={s.howNum}>1</div>
               <div style={s.howText}>Just add URLs of all the newsletters you follow</div>

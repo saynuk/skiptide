@@ -80,4 +80,15 @@ input { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
     color: #b8a8d4;
     font-style: italic;
   }
+  .try-row {
+    flex-direction: column;
+  }
+
+  .try-row button {
+    width: 100%;
+  }
+
+  .how-steps {
+    grid-template-columns: 1fr;
+  }
 }
