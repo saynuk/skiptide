@@ -96,13 +96,10 @@ export default function LandingPage() {
 
         {/* Hero */}
         <section style={s.hero}>
-          <p style={s.eyebrow}>A quiet corner of the internet</p>
 		  <h1 style={s.headline}>
 			  Zenscroll the independent writers you follow.
 			</h1>
-			<p style={s.headlineSub} className="headline-sub">
-			  No ads, trolls, or popups.
-			</p>			
+          <p style={s.eyebrow}>No ads, trolls, or popups.</p>
 			<p style={s.sub}>
             <strong>Add your first one:</strong> Paste any newsletter or blog below to get started. Add more for an algorithm-free experience with the people you follow.
           </p>
