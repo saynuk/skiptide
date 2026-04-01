@@ -131,6 +131,13 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           <div className="feed-logo">
             skip<span>tide</span>
           </div>
+		  
+        {/* About, pricing */}
+		<div className="sidetab">
+			<div className="about"><a href="/about">About</a></div>
+			<div className="billing"><a href="https://buymeacoffee.com/saynuk/membership" traget="_blank">Billing</a></div>
+		</div>
+		  
           <div className="feed-topbar-right">
             <button className="feed-add-btn" onClick={() => setShowModal(true)}>+ Add a writer</button>
             <button className="feed-theme-btn" onClick={toggle} title="Toggle theme">

@@ -195,7 +195,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-
+		
         <footer style={s.footer}>
           © 2026 Skiptide · A quiet place to read
         </footer>
