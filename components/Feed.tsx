@@ -56,6 +56,7 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
   const [showModal, setShowModal] = useState(false)
   const [skipQuery, setSkipQuery] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
   const skipRef = useRef<HTMLDivElement>(null)
   const { theme, toggle } = useTheme()
   const supabase = createClient()
@@ -126,24 +127,39 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
 
   return (
     <div className="feed-page">
+
+      {/* Desktop side tab — fixed to viewport, hidden on mobile */}
+      <div className="sidetab">
+        <a href="/about" className="sidetab-item">
+          <div className="sidetab-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <span className="sidetab-label">About</span>
+        </a>
+        <a href="https://buymeacoffee.com/saynuk/membership" target="_blank" rel="noopener noreferrer" className="sidetab-item">
+          <div className="sidetab-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <span className="sidetab-label">Support</span>
+        </a>
+      </div>
+
       <div className="feed-container">
         <div className="feed-topbar">
           <div className="feed-logo">
             skip<span>tide</span>
           </div>
-		  
-        {/* About, pricing */}
-		<div className="sidetab">
-			<div className="about"><a href="/about">About</a></div>
-			<div className="billing"><a href="https://buymeacoffee.com/saynuk/membership" target="_blank">Billing</a></div>
-		</div>
-		  
           <div className="feed-topbar-right">
             <button className="feed-add-btn" onClick={() => setShowModal(true)}>+ Add a writer</button>
             <button className="feed-theme-btn" onClick={toggle} title="Toggle theme">
               {theme === 'dark' ? '☀︎' : '☾'}
             </button>
             <button className="feed-signout-btn" onClick={handleSignOut}>Sign out</button>
+            <button className="mobile-menu-btn" onClick={() => setShowMobileMenu(true)}>
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -249,6 +265,28 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           onSourceAdded={handleSourceAdded}
         />
       )}
+
+      {/* Mobile slide-up sheet — hidden on desktop */}
+      <div
+        className={`mobile-overlay-dim ${showMobileMenu ? 'open' : ''}`}
+        onClick={() => setShowMobileMenu(false)}
+      />
+      <div className={`mobile-sheet ${showMobileMenu ? 'open' : ''}`}>
+        <div className="mobile-sheet-handle" />
+        <a href="/about" className="mobile-sheet-link">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          About Skiptide
+        </a>
+        <a href="https://buymeacoffee.com/saynuk/membership" target="_blank" rel="noopener noreferrer" className="mobile-sheet-link">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Support Skiptide
+        </a>
+        <div className="mobile-sheet-link" onClick={handleSignOut}>
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign out
+        </div>
+      </div>
+
     </div>
   )
 }
@@ -263,9 +301,9 @@ function PostSection({ label, posts, readSet, onPostClick, sources }: {
   return (
     <div className="feed-section">
       <div className="feed-section-label">{label}</div>
-		{posts.map((post, i) => (
-		  <PostCard
-			key={`${post.id}-${i}`}		  
+      {posts.map((post, i) => (
+        <PostCard
+          key={`${post.id}-${i}`}
           post={post}
           isRead={readSet.has(post.id)}
           sourceName={sources.find(s => s.id === post.source_id)?.title || ''}
