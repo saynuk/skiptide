@@ -142,6 +142,12 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           </div>
           <span className="sidetab-label">Support</span>
         </a>
+		<div className="sidetab-item" onClick={handleSignOut} style={{ cursor: 'pointer' }}>
+		  <div className="sidetab-icon">
+			<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+		  </div>
+		  <span className="sidetab-label">Sign out</span>
+		</div>
       </div>
 
       <div className="feed-container">
@@ -154,7 +160,6 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
             <button className="feed-theme-btn" onClick={toggle} title="Toggle theme">
               {theme === 'dark' ? '☀︎' : '☾'}
             </button>
-            <button className="feed-signout-btn" onClick={handleSignOut}>Sign out</button>
             <button className="mobile-menu-btn" onClick={() => setShowMobileMenu(true)}>
               <svg viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
