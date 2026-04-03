@@ -237,7 +237,7 @@ const s: Record<string, React.CSSProperties> = {
     margin: '0 auto',
   },
   logo: {
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Fraunces, serif',
     fontSize: 22,
     fontWeight: 400,
     letterSpacing: '0.01em',
@@ -274,7 +274,7 @@ const s: Record<string, React.CSSProperties> = {
     fontWeight: 500,
   },
   headline: {
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Fraunces, serif',
     fontSize: 'clamp(36px, 6vw, 62px)' as any,
     fontWeight: 300,
     lineHeight: 1.2,
@@ -283,7 +283,7 @@ const s: Record<string, React.CSSProperties> = {
     letterSpacing: '-0.01em',
   },
 	headlineSub: {
-	  fontFamily: 'Georgia, serif',
+	  fontFamily: 'Fraunces, serif',
 	  fontSize: 'clamp(22px, 3.5vw, 36px)' as any,
 	  fontWeight: 300,
 	  fontStyle: 'italic',
@@ -298,7 +298,7 @@ const s: Record<string, React.CSSProperties> = {
     maxWidth: 480,
     margin: '0 auto 40px',
     fontWeight: 300,
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Fraunces, serif',
   },
   tryBox: {
     background: 'var(--bg-card)',
@@ -383,7 +383,7 @@ const s: Record<string, React.CSSProperties> = {
     marginTop: 8,
   },
   previewTitle: {
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Fraunces, serif',
     fontSize: 16,
     fontWeight: 400,
     color: 'var(--text-primary)',
@@ -395,7 +395,7 @@ const s: Record<string, React.CSSProperties> = {
     color: 'var(--text-secondary)',
     lineHeight: 1.5,
     marginBottom: 4,
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Fraunces, serif',
     fontWeight: 300,
   },
   previewDate: {
@@ -412,7 +412,7 @@ const s: Record<string, React.CSSProperties> = {
     textAlign: 'center' as const,
   },
   signupText: {
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Fraunces, serif',
     fontSize: 18,
     fontWeight: 400,
     color: 'var(--text-primary)',
@@ -458,7 +458,7 @@ const s: Record<string, React.CSSProperties> = {
   signupSent: {
     fontSize: 14,
     color: 'var(--accent)',
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Fraunces, serif',
     lineHeight: 1.6,
   },
   how: {
@@ -479,7 +479,7 @@ const s: Record<string, React.CSSProperties> = {
     backdropFilter: 'blur(8px)',
   },
   howNum: {
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Fraunces, serif',
     fontWeight: 300,
     color: 'var(--accent-mid)',
     marginBottom: 12,
@@ -490,7 +490,7 @@ const s: Record<string, React.CSSProperties> = {
     color: 'var(--text-secondary)',
     lineHeight: 1.6,
     fontWeight: 300,
-    fontFamily: 'Georgia, serif',
+    fontFamily: 'Fraunces, serif',
   },
   footer: {
     textAlign: 'center' as const,
