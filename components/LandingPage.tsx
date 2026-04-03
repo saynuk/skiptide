@@ -97,7 +97,7 @@ export default function LandingPage() {
         {/* Hero */}
         <section style={s.hero}>
 		  <h1 style={s.headline}>
-			  Zenscroll the independent writers you follow.
+			  Skip the noise. Scroll the writers you follow.
 			</h1>
           <p style={s.eyebrow}>No ads, trolls, or popups.</p>
 			<p style={s.sub}>
