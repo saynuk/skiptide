@@ -5,7 +5,7 @@ export default function AboutPage() {
     <div style={s.page}>
       <div style={s.inner}>
         <Link href="/dashboard" style={s.logo}>
-          skip<span style={s.logoSpan}>tide</span>
+          ‹ skip<span style={s.logoSpan}>tide</span>
         </Link>
 
         <h1 style={s.headline}>
