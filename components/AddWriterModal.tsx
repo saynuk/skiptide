@@ -102,15 +102,16 @@ export default function AddWriterModal({ onClose, onSourceAdded }: Props) {
 
 const s: Record<string, React.CSSProperties> = {
   overlay: {
-    position: 'fixed',
-    inset: 0,
-    background: 'rgba(0,0,0,0.4)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 100,
-    padding: '16px',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  position: 'fixed',
+  inset: 0,
+  background: 'rgba(45,37,53,0.5)',
+  backdropFilter: 'blur(4px)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 100,
+  padding: 16,
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
   modal: {
     background: 'var(--bg)',

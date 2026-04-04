@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useTheme } from '@/lib/useTheme'
 import AddWriterModal from './AddWriterModal'
+import ManagePeopleModal from './ManagePeopleModal'
 import '@/app/feed.css'
 
 type Source = {
@@ -54,6 +55,7 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
   const [readSet, setReadSet] = useState<Set<string>>(new Set(readPostIds))
   const [activeSourceId, setActiveSourceId] = useState<string | null>(null)
   const [showModal, setShowModal] = useState(false)
+  const [showManage, setShowManage] = useState(false)
   const [skipQuery, setSkipQuery] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
@@ -98,7 +100,6 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
   }
 
   async function handleRemoveSource(sourceId: string) {
-    if (!confirm('Remove this writer from your feed?')) return
     await fetch(`/api/sources/${sourceId}`, { method: 'DELETE' })
     setSources(prev => prev.filter(s => s.id !== sourceId))
     if (activeSourceId === sourceId) setActiveSourceId(null)
@@ -119,16 +120,21 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
 
   function selectSource(id: string | null) {
     setActiveSourceId(id)
-    setSkipQuery(id ? (sources.find(s => s.id === id)?.title || '') : '')
+    setSkipQuery('')
     setDropdownOpen(false)
   }
 
-  const activeSourceName = activeSourceId ? sources.find(s => s.id === activeSourceId)?.title : null
+  const activeSource = activeSourceId ? sources.find(s => s.id === activeSourceId) : null
+
+  function openManage() {
+    setShowMobileMenu(false)
+    setShowManage(true)
+  }
 
   return (
     <div className="feed-page">
 
-      {/* Desktop side tab — fixed to viewport, hidden on mobile */}
+      {/* Desktop side tab */}
       <div className="sidetab">
         <a href="/about" className="sidetab-item">
           <div className="sidetab-icon">
@@ -136,27 +142,33 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           </div>
           <span className="sidetab-label">About</span>
         </a>
+        <div className="sidetab-item" onClick={openManage} style={{ cursor: 'pointer' }}>
+          <div className="sidetab-icon">
+            <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </div>
+          <span className="sidetab-label">People I follow</span>
+        </div>
         <a href="https://buymeacoffee.com/saynuk/membership" target="_blank" rel="noopener noreferrer" className="sidetab-item">
           <div className="sidetab-icon">
             <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </div>
           <span className="sidetab-label">Support Skiptide</span>
         </a>
-		<div className="sidetab-item" onClick={handleSignOut} style={{ cursor: 'pointer' }}>
-		  <div className="sidetab-icon">
-			<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-		  </div>
-		  <span className="sidetab-label">Sign out</span>
-		</div>
+        <div className="sidetab-item" onClick={handleSignOut} style={{ cursor: 'pointer' }}>
+          <div className="sidetab-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </div>
+          <span className="sidetab-label">Sign out</span>
+        </div>
       </div>
 
       <div className="feed-container">
         <div className="feed-topbar">
           <div className="feed-logo">
-            skip<span>tide</span>
+            skip<span className="logoSpan">tide</span>
           </div>
           <div className="feed-topbar-right">
-            <button className="feed-add-btn" onClick={() => setShowModal(true)}>+ Add a writer</button>
+            <button className="feed-add-btn" onClick={() => setShowModal(true)}>+ Add</button>
             <button className="feed-theme-btn" onClick={toggle} title="Toggle theme">
               {theme === 'dark' ? '☀︎' : '☾'}
             </button>
@@ -170,53 +182,55 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
 
         {sources.length > 0 && (
           <div className="skip-wrap" ref={skipRef}>
-            <input
-              className="skip-input"
-              value={skipQuery}
-              placeholder="Skip to…"
-              onChange={e => { setSkipQuery(e.target.value); setDropdownOpen(true) }}
-              onFocus={() => setDropdownOpen(true)}
-            />
-            {activeSourceId && (
-              <button className="skip-clear-btn" onClick={() => selectSource(null)}>✕</button>
-            )}
-            {dropdownOpen && (
-              <div className="skip-dropdown">
-                {!skipQuery && (
-                  <>
-                    <div
-                      className={`skip-dropdown-item ${!activeSourceId ? 'active' : ''}`}
-                      onClick={() => selectSource(null)}
-                    >
-                      <span>Everyone</span>
-                      <span className="skip-unread-badge">{totalUnread > 0 ? `${totalUnread} unread` : ''}</span>
-                    </div>
-                    <div className="skip-dropdown-divider" />
-                  </>
-                )}
-                {filteredSources.map(source => {
-                  const unread = posts.filter(p => p.source_id === source.id && !readSet.has(p.id)).length
-                  return (
-                    <div
-                      key={source.id}
-                      className={`skip-dropdown-item ${activeSourceId === source.id ? 'active' : ''}`}
-                      onClick={() => selectSource(source.id)}
-                    >
-                      <span>{source.title}</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span className="skip-unread-badge">{unread > 0 ? `${unread} unread` : ''}</span>
-                        <button
-                          className="skip-remove-btn"
-                          onClick={e => { e.stopPropagation(); handleRemoveSource(source.id) }}
-                        >✕</button>
-                      </div>
-                    </div>
-                  )
-                })}
-                {filteredSources.length === 0 && (
-                  <div className="skip-dropdown-empty">No writers match that name</div>
-                )}
+
+            {/* Pill shown when a source is active */}
+            {activeSource ? (
+              <div className="skip-pill">
+                <span className="skip-pill-name">{activeSource.title}</span>
+                <button className="skip-pill-x" onClick={() => selectSource(null)}>✕</button>
               </div>
+            ) : (
+              <>
+                <input
+                  className="skip-input"
+                  value={skipQuery}
+                  placeholder="Skip to…"
+                  onChange={e => { setSkipQuery(e.target.value); setDropdownOpen(true) }}
+                  onFocus={() => setDropdownOpen(true)}
+                />
+                {dropdownOpen && (
+                  <div className="skip-dropdown">
+                    {!skipQuery && (
+                      <>
+                        <div
+                          className="skip-dropdown-item active"
+                          onClick={() => selectSource(null)}
+                        >
+                          <span>Everyone</span>
+                          <span className="skip-unread-badge">{totalUnread > 0 ? `${totalUnread} unread` : ''}</span>
+                        </div>
+                        <div className="skip-dropdown-divider" />
+                      </>
+                    )}
+                    {filteredSources.map(source => {
+                      const unread = posts.filter(p => p.source_id === source.id && !readSet.has(p.id)).length
+                      return (
+                        <div
+                          key={source.id}
+                          className="skip-dropdown-item"
+                          onClick={() => selectSource(source.id)}
+                        >
+                          <span>{source.title}</span>
+                          <span className="skip-unread-badge">{unread > 0 ? `${unread} unread` : ''}</span>
+                        </div>
+                      )
+                    })}
+                    {filteredSources.length === 0 && (
+                      <div className="skip-dropdown-empty">No matches</div>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
@@ -225,8 +239,7 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           <div className="feed-empty-state">
             <p className="feed-empty-title">Your feed is empty</p>
             <p className="feed-empty-hint">
-              Add a writer or blog to get started. Paste any Substack, Medium,
-              Ghost, or blog URL and we'll find their posts automatically.
+              Add anyone who publishes online — Substack, Medium, Ghost, Tumblr, or most blogs. Paste their URL and we'll find their posts automatically.
             </p>
             <button className="feed-empty-btn" onClick={() => setShowModal(true)}>
               Add your first writer
@@ -236,12 +249,8 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
 
         {sources.length > 0 && (
           <>
-            {activeSourceName && (
-              <p className="feed-filter-label">Showing: {activeSourceName}</p>
-            )}
-
             {visiblePosts.length === 0 && (
-              <div className="feed-caught-up">No posts yet from this writer.</div>
+              <div className="feed-caught-up">No posts yet from this person.</div>
             )}
 
             {todayPosts.length > 0 && (
@@ -271,7 +280,15 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
         />
       )}
 
-      {/* Mobile slide-up sheet — hidden on desktop */}
+      {showManage && (
+        <ManagePeopleModal
+          sources={sources}
+          onClose={() => setShowManage(false)}
+          onRemove={handleRemoveSource}
+        />
+      )}
+
+      {/* Mobile slide-up sheet */}
       <div
         className={`mobile-overlay-dim ${showMobileMenu ? 'open' : ''}`}
         onClick={() => setShowMobileMenu(false)}
@@ -282,6 +299,10 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           About
         </a>
+        <div className="mobile-sheet-link" onClick={openManage}>
+          <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          People I follow
+        </div>
         <a href="https://buymeacoffee.com/saynuk/membership" target="_blank" rel="noopener noreferrer" className="mobile-sheet-link">
           <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           Support Skiptide

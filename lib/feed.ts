@@ -85,6 +85,15 @@ function buildCandidates(url: string): string[] {
     candidates.push(`${base}/feed`)
   }
 
+  if (u.host.includes('tumblr.com')) {
+    const pathParts = u.pathname.split('/').filter(Boolean)
+    if (pathParts.length > 0 && u.host === 'www.tumblr.com') {
+      candidates.push(`https://${pathParts[0]}.tumblr.com/rss`)
+      candidates.push(`${base}/${pathParts[0]}/rss`)
+    }
+    candidates.push(`${base}/rss`)
+  }
+
   if (u.host.includes('medium.com')) {
     candidates.push(`${base}/feed`)
     if (path) candidates.push(`https://medium.com/feed${path}`)
@@ -128,6 +137,37 @@ function extractFeedFromHTML(html: string, baseUrl: string): string | null {
   return `${base.protocol}//${base.host}${href.startsWith('/') ? '' : '/'}${href}`
 }
 
+function decodeEntities(text: string): string {
+  return text
+    .replace(/&ldquo;/g, '\u201C')
+    .replace(/&rdquo;/g, '\u201D')
+    .replace(/&lsquo;/g, '\u2018')
+    .replace(/&rsquo;/g, '\u2019')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&mdash;/g, '\u2014')
+    .replace(/&ndash;/g, '\u2013')
+    .replace(/&hellip;/g, '\u2026')
+    .replace(/&middot;/g, '\u00B7')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&copy;/g, '\u00A9')
+    .replace(/&reg;/g, '\u00AE')
+    .replace(/&trade;/g, '\u2122')
+    .replace(/&euro;/g, '\u20AC')
+    .replace(/&pound;/g, '\u00A3')
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(Number(dec)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+}
+
+function extractExcerpt(text: string, maxLength = 200): string {
+  const stripped = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  if (stripped.length <= maxLength) return stripped
+  return stripped.slice(0, maxLength).replace(/\s+\S*$/, '') + '…'
+}
+
 export async function fetchFeed(feedUrl: string): Promise<Array<{
   guid: string
   title: string
@@ -139,18 +179,12 @@ export async function fetchFeed(feedUrl: string): Promise<Array<{
     const feed = await parser.parseURL(feedUrl)
     return (feed.items || []).map(item => ({
       guid: item.guid || item.link || item.title || '',
-      title: item.title || 'Untitled',
-      excerpt: extractExcerpt(item.contentSnippet || item.content || item.summary || ''),
+      title: decodeEntities(item.title || 'Untitled'),
+      excerpt: extractExcerpt(decodeEntities(item.contentSnippet || item.content || item.summary || '')),
       url: item.link || '',
       publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
     })).filter(item => item.url && item.guid)
   } catch {
     return []
   }
-}
-
-function extractExcerpt(text: string, maxLength = 200): string {
-  const stripped = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
-  if (stripped.length <= maxLength) return stripped
-  return stripped.slice(0, maxLength).replace(/\s+\S*$/, '') + '…'
 }

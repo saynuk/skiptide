@@ -79,6 +79,11 @@ input { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
 	font-size: 36px;
 }
 
+.logoSpan {
+    color: var(--accent-mid);
+}
+
+
 @media (max-width: 768px) {
   .orb1, .orb2, .orb3 { opacity: 0.15; }
 }
