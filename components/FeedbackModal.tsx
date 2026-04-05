@@ -51,7 +51,7 @@ export default function FeedbackModal({ onClose }: Props) {
         ) : (
           <form onSubmit={handleSubmit} style={s.form}>
             <p style={s.hint}>
-              Something broken? Something delightful? Tell Adam directly — this goes nowhere else.
+              Something broken? Something delightful? Ideas for improvement? Tell Adam directly.
             </p>
             <textarea
               style={s.textarea}
@@ -130,7 +130,6 @@ const s: Record<string, React.CSSProperties> = {
     color: 'var(--text-secondary)',
     lineHeight: 1.6,
     fontFamily: "'Fraunces', Georgia, serif",
-    fontStyle: 'italic',
   },
   textarea: {
     width: '100%',
