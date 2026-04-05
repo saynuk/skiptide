@@ -1,4 +1,4 @@
-'use clienxt'
+'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
