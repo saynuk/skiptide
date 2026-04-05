@@ -337,7 +337,7 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
 		  <FeedbackModal onClose={() => setShowFeedback(false)} />
 		)}
 		
-    {/* THIS CLOSES FEED-PAGE I THINK */}</div>
+    </div>
   )
 }
 
