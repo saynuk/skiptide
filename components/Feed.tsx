@@ -1,4 +1,4 @@
-'use client'
+'use clienxt'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -6,6 +6,7 @@ import { useTheme } from '@/lib/useTheme'
 import AddWriterModal from './AddWriterModal'
 import ManagePeopleModal from './ManagePeopleModal'
 import '@/app/feed.css'
+import FeedbackModal from './FeedbackModal'
 
 type Source = {
   id: string
@@ -56,6 +57,7 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
   const [activeSourceId, setActiveSourceId] = useState<string | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [showManage, setShowManage] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
   const [skipQuery, setSkipQuery] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
@@ -154,7 +156,13 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           </div>
           <span className="sidetab-label">Support Skiptide</span>
         </a>
-        <div className="sidetab-item" onClick={handleSignOut} style={{ cursor: 'pointer' }}>
+		<div className="sidetab-item" onClick={() => setShowFeedback(true)} style={{ cursor: 'pointer' }}>
+		  <div className="sidetab-icon">
+			<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+		  </div>
+		  <span className="sidetab-label">Share feedback</span>
+		</div>
+		<div className="sidetab-item" onClick={handleSignOut} style={{ cursor: 'pointer' }}>
           <div className="sidetab-icon">
             <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </div>
@@ -169,10 +177,18 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           </div>
           <div className="feed-topbar-right">
             <button className="feed-add-btn" onClick={() => setShowModal(true)}>+ Add</button>
-            <button className="feed-theme-btn" onClick={toggle} title="Toggle theme">
-              {theme === 'dark' ? '☀︎' : '☾'}
-            </button>
-            <button className="mobile-menu-btn" onClick={() => setShowMobileMenu(true)}>
+		<button className="feed-theme-btn" onClick={toggle} title="Toggle theme">
+		  {theme === 'dark' ? (
+			<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" strokeWidth="1.5" strokeLinecap="round">
+			  <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+			</svg>
+		  ) : (
+			<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" strokeWidth="1.5" strokeLinecap="round">
+			  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+			</svg>
+		  )}
+		</button>            
+		<button className="mobile-menu-btn" onClick={() => setShowMobileMenu(true)}>
               <svg viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
               </svg>
@@ -307,13 +323,21 @@ export default function Feed({ sources: initialSources, posts: initialPosts, rea
           <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           Support Skiptide
         </a>
+		<div className="mobile-sheet-link" onClick={() => { setShowMobileMenu(false); setShowFeedback(true) }}>
+		  <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+		  Share feedback
+		</div>
         <div className="mobile-sheet-link" onClick={handleSignOut}>
           <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Sign out
         </div>
       </div>
-
-    </div>
+	  
+		{showFeedback && (
+		  <FeedbackModal onClose={() => setShowFeedback(false)} />
+		)}
+		
+    </div>{/* THIS CLOSES FEED-PAGE I THINK */}
   )
 }
 

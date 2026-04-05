@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { discoverFeed } from '@/lib/feed'
 import { NextResponse } from 'next/server'
 
+const SOURCE_LIMIT = 10
+
 export async function POST(request: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -15,16 +17,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'URL is required' }, { status: 400 })
   }
 
-// Patreon feeds are private and require a personal auth token
-if (new URL(url).hostname.includes('patreon.com')) {
-  return NextResponse.json(
-    {
-      error:
-      "Patreon feeds are private and can't be added by URL. If you're a paying member, log in to Patreon, go to the creator's page, open the Membership tab, and look for \"Private RSS link.\" Copy that URL and paste it here instead.",
-    },
-    { status: 422 }
-  )
-}
+  // Check source limit
+  const { count } = await supabase
+    .from('subscriptions')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+
+  if (count !== null && count >= SOURCE_LIMIT) {
+    return NextResponse.json(
+      { error: `You've reached the limit of ${SOURCE_LIMIT} sources. We'll be adding more options soon.`, limitReached: true },
+      { status: 403 }
+    )
+  }
 
   // Discover the feed
   const discovered = await discoverFeed(url)
@@ -35,7 +39,7 @@ if (new URL(url).hostname.includes('patreon.com')) {
     )
   }
 
-  // Upsert source (in case it already exists from another user)
+  // Upsert source
   const { data: source, error: sourceError } = await supabase
     .from('sources')
     .upsert({
@@ -52,7 +56,7 @@ if (new URL(url).hostname.includes('patreon.com')) {
     return NextResponse.json({ error: 'Could not save source' }, { status: 500 })
   }
 
-  // Subscribe user to this source
+  // Subscribe user
   const { error: subError } = await supabase
     .from('subscriptions')
     .upsert({ user_id: user.id, source_id: source.id }, { onConflict: 'user_id,source_id' })
@@ -61,7 +65,7 @@ if (new URL(url).hostname.includes('patreon.com')) {
     return NextResponse.json({ error: 'Could not subscribe' }, { status: 500 })
   }
 
-  // Immediately fetch posts for this source
+  // Fetch initial posts
   const { fetchFeed } = await import('@/lib/feed')
   const feedItems = await fetchFeed(discovered.feedUrl)
 
@@ -85,13 +89,13 @@ if (new URL(url).hostname.includes('patreon.com')) {
   }
 
   const posts = feedItems.map(item => ({
-  source_id: source.id,
-  guid: item.guid,
-  title: item.title,
-  excerpt: item.excerpt,
-  url: item.url,
-  published_at: item.publishedAt.toISOString(),
-}))
+    source_id: source.id,
+    guid: item.guid,
+    title: item.title,
+    excerpt: item.excerpt,
+    url: item.url,
+    published_at: item.publishedAt.toISOString(),
+  }))
 
-return NextResponse.json({ source, posts, postCount: posts.length })
+  return NextResponse.json({ source, posts, postCount: posts.length })
 }

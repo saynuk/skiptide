@@ -48,6 +48,12 @@ export default function AddWriterModal({ onClose, onSourceAdded }: Props) {
         setLoading(false)
         return
       }
+	  
+		if (data.limitReached) {
+		  setError("You've reached 10 sources for now — we'll be opening up more spots soon.")
+		  setLoading(false)
+		  return
+		}
 
       onSourceAdded(data.source, data.posts || [])
     } catch {
